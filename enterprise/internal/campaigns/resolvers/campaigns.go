@@ -283,21 +283,20 @@ func (r *campaignResolver) DiffStat(ctx context.Context) (*graphqlbackend.DiffSt
 		},
 	}
 
-	changesetDiffs := &changesetDiffsConnectionResolver{changesetsConnection}
-	repoComparisons, err := changesetDiffs.Nodes(ctx)
+	changesets, err := changesetsConnection.Nodes(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	totalStat := &graphqlbackend.DiffStat{}
-
-	for _, repoComp := range repoComparisons {
-		fileDiffs := repoComp.FileDiffs(&graphqlbackend.FileDiffsConnectionArgs{})
-		s, err := fileDiffs.DiffStat(ctx)
+	for _, cs := range changesets {
+		stat, err := cs.DiffStat(ctx)
 		if err != nil {
 			return nil, err
 		}
-		totalStat.AddDiffStat(s)
+		if stat != nil {
+			totalStat.AddDiffStat(stat)
+		}
 	}
 
 	// We don't have a patch set, so we don't have patches and can return
