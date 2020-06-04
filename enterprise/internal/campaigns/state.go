@@ -401,5 +401,5 @@ func unixMilliToTime(ms int64) time.Time {
 }
 
 func ComputeDiffStat(c *cmpgn.Changeset) (diff.Stat, error) {
-	return nil, nil
+	return diff.Stat{}, nil
 }
