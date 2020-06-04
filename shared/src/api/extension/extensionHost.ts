@@ -12,7 +12,6 @@ import { createDecorationType } from './api/decorations'
 import { ExtDocuments } from './api/documents'
 import { ExtExtensions } from './api/extensions'
 import { ExtLanguageFeatures } from './api/languageFeatures'
-import { ExtSearch } from './api/search'
 import { ExtViews } from './api/views'
 import { ExtWindows } from './api/windows'
 import { registerComlinkTransferHandlers } from '../util'
@@ -136,10 +135,9 @@ function createExtensionAPI(
     const windows = new ExtWindows(proxy, documents)
     const views = new ExtViews(proxy.views)
     const languageFeatures = new ExtLanguageFeatures(proxy.languageFeatures, documents)
-    const search = new ExtSearch(proxy.search)
     const content = new ExtContent(proxy.content)
 
-    const { configuration, exposedToMain, workspace, state, commands } = initNewExtensionAPI(proxy)
+    const { configuration, exposedToMain, workspace, state, commands, search } = initNewExtensionAPI(proxy)
 
     // Expose the extension host API to the client (main thread)
     const extensionHostAPI: ExtensionHostAPI = {
@@ -246,11 +244,7 @@ function createExtensionAPI(
             ) => languageFeatures.registerCompletionItemProvider(selector, provider),
         },
 
-        search: {
-            registerQueryTransformer: (provider: sourcegraph.QueryTransformer) =>
-                search.registerQueryTransformer(provider),
-        },
-
+        search,
         commands,
         content: {
             registerLinkPreviewProvider: (urlMatchPattern: string, provider: sourcegraph.LinkPreviewProvider) =>
