@@ -117,12 +117,6 @@ export const CodeIntelIndexesPage: FunctionComponent<Props> = ({ repo, ...props 
 
     const filters: FilteredConnectionFilter[] = [
         {
-            label: 'Only current',
-            id: 'current',
-            tooltip: 'Show current indexes only',
-            args: { isLatestForRepo: true },
-        },
-        {
             label: 'Only completed',
             id: 'completed',
             tooltip: 'Show completed indexes only',
