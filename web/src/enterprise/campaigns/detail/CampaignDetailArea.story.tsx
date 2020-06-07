@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react'
 import * as GQL from '../../../../../shared/src/graphql/schema'
 import React from 'react'
-import { CampaignDetails } from './CampaignDetails'
+import { CampaignDetailArea } from './CampaignDetailArea'
 import webStyles from '../../../SourcegraphWebApp.scss'
 import { NOOP_TELEMETRY_SERVICE } from '../../../../../shared/src/telemetry/telemetryService'
 import { of } from 'rxjs'
@@ -11,7 +11,7 @@ import { MemoryRouter } from 'react-router'
 const history = H.createMemoryHistory()
 
 const COMMON_PROPS: Pick<
-    React.ComponentProps<typeof CampaignDetails>,
+    React.ComponentProps<typeof CampaignDetailArea>,
     'isLightTheme' | 'history' | 'location' | 'extensionsController' | 'platformContext' | 'telemetryService'
 > = {
     isLightTheme: true,
@@ -170,7 +170,7 @@ const SAMPLE_ChangesetCounts: GQL.IChangesetCounts[] = [
     { date: '2020-01-06', open: 0, merged: 4, openApproved: 0, total: 4 },
 ] as GQL.IChangesetCounts[]
 
-const { add } = storiesOf('web/campaigns/CampaignDetails', module).addDecorator(story => (
+const { add } = storiesOf('web/campaigns/CampaignDetailArea', module).addDecorator(story => (
     <>
         <style>{webStyles}</style>
         <div className="theme-light mt-3">{story()}</div>
@@ -179,7 +179,7 @@ const { add } = storiesOf('web/campaigns/CampaignDetails', module).addDecorator(
 
 add('With patches', () => (
     <MemoryRouter>
-        <CampaignDetails
+        <CampaignDetailArea
             {...COMMON_PROPS}
             authenticatedUser={{ id: 'u', username: 'alice', avatarURL: null }}
             campaign={{
@@ -209,7 +209,7 @@ add('With patches', () => (
 ))
 
 add('Publishing', () => (
-    <CampaignDetails
+    <CampaignDetailArea
         {...COMMON_PROPS}
         authenticatedUser={{ id: 'u', username: 'alice', avatarURL: null }}
         campaign={{

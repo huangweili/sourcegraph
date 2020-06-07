@@ -8,6 +8,6 @@ interface Props {
     history: H.History
 }
 
-export const CampaignBurndownChartSection: React.FunctionComponent<Props> = ({ campaign, history }) => (
+export const CampaignBurndownPage: React.FunctionComponent<Props> = ({ campaign, history }) => (
     <CampaignBurndownChart changesetCountsOverTime={campaign.changesetCountsOverTime} history={history} />
 )

@@ -4,7 +4,7 @@ import { CampaignsIcon } from '../icons'
 import { Link } from '../../../../../shared/src/components/Link'
 import { LoadingSpinner } from '@sourcegraph/react-loading-spinner'
 import { CloseDeleteCampaignPrompt } from './form/CloseDeleteCampaignPrompt'
-import { CampaignUIMode } from './CampaignDetails'
+import { CampaignUIMode } from './CampaignDetailArea'
 
 interface Props {
     mode: CampaignUIMode

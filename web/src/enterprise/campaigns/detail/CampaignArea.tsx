@@ -21,7 +21,7 @@ import { PlatformContextProps } from '../../../../../shared/src/platform/context
 import { TelemetryProps } from '../../../../../shared/src/telemetry/telemetryService'
 import { repeatUntil } from '../../../../../shared/src/util/rxjs/repeatUntil'
 import { Route, Switch, RouteComponentProps } from 'react-router'
-import { CampaignDetails } from './CampaignDetails'
+import { CampaignDetailArea } from './CampaignDetailArea'
 import { UpdateCampaignPage } from './update/UpdateCampaignPage'
 import { CampaignBreadcrumbs } from '../common/CampaignBreadcrumbs'
 
@@ -140,17 +140,6 @@ export const CampaignArea: React.FunctionComponent<Props> = ({
                 <CampaignBreadcrumbs campaign={campaign} className="mb-2" />
             </div>
             <Switch>
-                <Route path={match.url} exact={true}>
-                    <CampaignDetails
-                        {...props}
-                        campaign={campaign}
-                        fetchPatchSetById={_fetchPatchSetById}
-                        queryPatchesFromCampaign={_queryPatchesFromCampaign}
-                        queryPatchesFromPatchSet={_queryPatchesFromPatchSet}
-                        queryPatchFileDiffs={_queryPatchFileDiffs}
-                        queryChangesets={_queryChangesets}
-                    />
-                </Route>
                 <Route path={`${match.url}/edit`}>
                     <div className="container">
                         <UpdateCampaignPage
@@ -165,6 +154,21 @@ export const CampaignArea: React.FunctionComponent<Props> = ({
                         />
                     </div>
                 </Route>
+                <Route
+                    path={match.url}
+                    render={({ match }) => (
+                        <CampaignDetailArea
+                            {...props}
+                            match={match}
+                            campaign={campaign}
+                            fetchPatchSetById={_fetchPatchSetById}
+                            queryPatchesFromCampaign={_queryPatchesFromCampaign}
+                            queryPatchesFromPatchSet={_queryPatchesFromPatchSet}
+                            queryPatchFileDiffs={_queryPatchFileDiffs}
+                            queryChangesets={_queryChangesets}
+                        />
+                    )}
+                />
             </Switch>
         </div>
     )
