@@ -132,13 +132,16 @@ export const CampaignDetails: React.FunctionComponent<Props> = ({
                                     <SourcePullIcon className="icon-inline text-danger" /> 2 closed
                                 </span>
                                 <div className="flex-1" />
-                                <Link to="#changesets" className="btn btn-link ml-3">
-                                    View all changesets
+                                <Link to="#TODO(sqs)" className="btn btn-link ml-3 mr-2 border">
+                                    Burndown chart
+                                </Link>
+                                <Link to="#changesets" className="btn btn-link border">
+                                    All changesets
                                 </Link>
                             </div>
                         </div>
                         <footer className="card-footer small text-muted">
-                            To add a changeset to this campaign, <strong>update the campaign plan</strong> or{' '}
+                            To add a changeset to this campaign, <strong>upload new patches</strong> or{' '}
                             <strong>track an existing changeset</strong>.
                         </footer>
                     </div>
@@ -147,7 +150,7 @@ export const CampaignDetails: React.FunctionComponent<Props> = ({
                             <CampaignsIcon className="h3 mb-0 mr-2 icon-inline text-muted" />
                             <div className="d-flex align-items-center flex-1">
                                 <span>
-                                    Campaign plan set by <strong>sqs</strong>{' '}
+                                    Patches uploaded by <strong>sqs</strong>{' '}
                                     <span className="text-muted">4 hours ago</span>
                                 </span>
                                 <div className="flex-1" />
@@ -159,27 +162,17 @@ export const CampaignDetails: React.FunctionComponent<Props> = ({
                         </div>
                     </div>
                     <CampaignStatus campaign={campaign} afterRetry={afterRetry} history={history} className="mt-3" />
-                    {totalChangesetCount > 0 && (
-                        <div className="card mt-3 w-100 pr-4 pb-3">
-                            <CampaignBurndownChart
-                                changesetCountsOverTime={campaign.changesetCountsOverTime}
-                                history={history}
-                                className="card-body"
-                            />
-                        </div>
-                    )}
                 </Timeline>
-                <div className="text-muted mt-2">
-                    To add a changeset to this campaign, <strong>update the campaign plan</strong> or{' '}
-                    <strong>track an existing changeset</strong>.
-                </div>
             </div>
-            <nav className="mt-5 mb-3 border-top border-bottom py-2">
+            <nav className="mt-5 mb-3 border-top border-bottom pt-2">
                 <div className="container d-flex align-items-center">
-                    <h3 className="font-weight-bold mb-0">
+                    <Link to="#TODO" className="font-weight-bold mb-0 mr-4 text-body border-bottom border-primary pb-2">
                         Changesets
                         <span className="badge badge-secondary ml-2">{campaign.changesets.totalCount}</span>
-                    </h3>
+                    </Link>
+                    <Link to="#TODO" className="mb-0 font-weight-normal text-body pb-2">
+                        Burndown chart
+                    </Link>
                     <div className="flex-1" />
                 </div>
             </nav>
