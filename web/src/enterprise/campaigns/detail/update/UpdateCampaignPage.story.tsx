@@ -10,7 +10,7 @@ import {
     SAMPLE_FileDiffConnection,
     SAMPLE_ExternalChangesetConnection,
     SAMPLE_PatchConnection,
-} from '../CampaignDetails.story'
+} from '../CampaignDetailArea.story'
 
 const history = H.createMemoryHistory()
 

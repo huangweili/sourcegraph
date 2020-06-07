@@ -14,7 +14,7 @@ interface Props {
 export const CampaignInfoBar: React.FunctionComponent<Props> = ({ campaign, className = '' }) => (
     <div className={`d-flex align-items-center ${className}`}>
         <CampaignStateBadge campaign={campaign} className="mr-2" />
-        <span>
+        <span className="d-none">
             Opened <Timestamp date={campaign.createdAt} /> by{' '}
             <Link to={campaign.author.url}>
                 <strong>{campaign.author.username}</strong>

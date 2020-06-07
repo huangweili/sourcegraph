@@ -39,11 +39,13 @@ import { CampaignsIcon } from '../icons'
 import { ChangesetStateIcon } from './changesets/ChangesetStateIcon'
 import { changesetStateIcons } from './changesets/presentation'
 import SourcePullIcon from 'mdi-react/SourcePullIcon'
+import ChartPpfIcon from 'mdi-react/ChartPpfIcon'
 import SourceMergeIcon from 'mdi-react/SourceMergeIcon'
 import ProgressCheckIcon from 'mdi-react/ProgressCheckIcon'
 import { CampaignPreamble } from './preamble/CampaignPreamble'
 import { CampaignChangesetsPage } from './changesets/CampaignChangesetsPage'
 import { CampaignBurndownPage } from './burndown/CampaignBurndownChartSection'
+import { OverviewPagesArea } from '../../../components/overviewPagesArea/OverviewPagesArea'
 
 export type CampaignUIMode = 'viewing' | 'deleting' | 'closing'
 
@@ -74,32 +76,36 @@ export const CampaignDetailArea: React.FunctionComponent<Props> = ({ campaign, h
         <div className="container">
             <CampaignPreamble campaign={campaign} history={history} />
         </div>
-        <nav className="mt-5 mb-3 border-top border-bottom pt-2">
-            <div className="container d-flex align-items-center">
-                <Link
-                    to={campaign.url}
-                    className="font-weight-bold mb-0 mr-4 text-body border-bottom border-primary pb-2"
-                >
-                    Changesets
-                    <span className="badge badge-secondary ml-2">{campaign.changesets.totalCount}</span>
-                </Link>
-                <Link to={`${campaign.url}/burndown`} className="mb-0 font-weight-normal text-body pb-2">
-                    Burndown chart
-                </Link>
-                <div className="flex-1" />
-            </div>
-        </nav>
-        <Switch>
-            <Route path={match.url} exact={true}>
-                <div className="container">
-                    <CampaignChangesetsPage campaign={campaign} history={history} {...props} />
-                </div>
-            </Route>
-            <Route path={`${match.url}/burndown`} exact={true}>
-                <div className="container">
-                    <CampaignBurndownPage campaign={campaign} history={history} />
-                </div>
-            </Route>
-        </Switch>
+        <OverviewPagesArea
+            context={{ campaign, history, ...props }}
+            pages={[
+                {
+                    title: 'Changesets',
+                    icon: SourcePullIcon,
+                    count: campaign.changesets.totalCount,
+                    path: '',
+                    exact: true,
+                    render: () => (
+                        <div className="container mt-3">
+                            <CampaignChangesetsPage campaign={campaign} history={history} {...props} />
+                        </div>
+                    ),
+                },
+                {
+                    title: 'Burndown chart',
+                    icon: ChartPpfIcon,
+                    path: '/burndown',
+                    exact: true,
+                    render: () => (
+                        <div className="container mt-3">
+                            <CampaignBurndownPage campaign={campaign} history={history} />
+                        </div>
+                    ),
+                },
+            ]}
+            location={props.location}
+            match={match}
+            className="mt-4 mb-3"
+        />
     </>
 )

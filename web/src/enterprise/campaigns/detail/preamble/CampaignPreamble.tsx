@@ -46,10 +46,10 @@ export const CampaignPreamble: React.FunctionComponent<Props> = ({ campaign, his
                             <SourcePullIcon className="icon-inline text-danger" /> 2 closed
                         </span>
                         <div className="flex-1" />
-                        <Link to="#TODO(sqs)" className="btn btn-link ml-3 mr-2 border">
+                        <Link to={`${campaign.url}/burndown`} className="btn btn-link ml-3 mr-2 border">
                             Burndown chart
                         </Link>
-                        <Link to="#changesets" className="btn btn-link border">
+                        <Link to={`${campaign.url}#changesets`} className="btn btn-link border">
                             All changesets
                         </Link>
                     </div>

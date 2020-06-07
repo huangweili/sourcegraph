@@ -20,7 +20,9 @@ export const CampaignDescription: React.FunctionComponent<Props> = ({ campaign, 
             <Link to={campaign.author.url}>
                 <strong>{campaign.author.username}</strong>
             </Link>{' '}
-            <Timestamp date={campaign.updatedAt} />
+            <span className="text-muted">
+                <Timestamp date={campaign.updatedAt} />
+            </span>
         </div>
         <div className="card-body">
             <Markdown
