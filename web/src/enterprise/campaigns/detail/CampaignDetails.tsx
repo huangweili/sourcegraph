@@ -141,8 +141,19 @@ export const CampaignDetails: React.FunctionComponent<Props> = ({
                             </div>
                         </div>
                         <footer className="card-footer small text-muted">
-                            To add a changeset to this campaign, <strong>upload new patches</strong> or{' '}
-                            <strong>track an existing changeset</strong>.
+                            To add a changeset to this campaign,{' '}
+                            <CampaignChangesetsEditButton campaign={campaign} buttonClassName="font-weight-bold">
+                                update the patches
+                            </CampaignChangesetsEditButton>{' '}
+                            or{' '}
+                            <CampaignChangesetsAddExistingButton
+                                campaign={campaign}
+                                buttonClassName="font-weight-bold"
+                                history={history}
+                            >
+                                track an existing changeset
+                            </CampaignChangesetsAddExistingButton>
+                            .
                         </footer>
                     </div>
                     <div className="card mt-3 w-100">
@@ -156,7 +167,7 @@ export const CampaignDetails: React.FunctionComponent<Props> = ({
                                 <div className="flex-1" />
                                 <CampaignChangesetsEditButton
                                     campaign={campaign}
-                                    buttonClassName="btn-secondary ml-3"
+                                    buttonClassName="btn btn-secondary ml-3 pr-1"
                                 />
                             </div>
                         </div>
@@ -178,15 +189,34 @@ export const CampaignDetails: React.FunctionComponent<Props> = ({
             </nav>
             <div className="container">
                 <a id="changesets" />
-                <div className="d-flex align-items-center mb-2">
-                    <div className="text-muted small">&nbsp;</div>
+                <div className="d-flex align-items-center flex-wrap mb-2">
+                    <div className="btn-group">
+                        <Link to="#TODO" className="btn btn-secondary">
+                            All
+                        </Link>
+                        <Link to="#TODO" className="btn btn-link border">
+                            Open
+                        </Link>
+                        <Link to="#TODO" className="btn btn-link border">
+                            Approved &amp; passing checks
+                        </Link>
+                        <Link to="#TODO" className="btn btn-link border">
+                            Awaiting review
+                        </Link>
+                        <Link to="#TODO" className="btn btn-link border">
+                            Failing checks
+                        </Link>
+                        <Link to="#TODO" className="btn btn-link border">
+                            Unpublished
+                        </Link>
+                    </div>
                     <div className="flex-1" />
                     <CampaignChangesetsAddExistingButton
                         campaign={campaign}
-                        buttonClassName="btn-link mr-2"
+                        buttonClassName="btn btn-secondary mr-2 pr-1"
                         history={history}
                     />
-                    <CampaignChangesetsEditButton campaign={campaign} buttonClassName="btn-secondary" />
+                    <CampaignChangesetsEditButton campaign={campaign} buttonClassName="btn btn-secondary pr-1" />
                 </div>
                 <CampaignChangesets
                     campaign={campaign}
