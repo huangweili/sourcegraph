@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import MenuDownIcon from 'mdi-react/MenuDownIcon'
 import * as GQL from '../../../../../../shared/src/graphql/schema'
 import { Link } from 'react-router-dom'
@@ -8,6 +8,7 @@ import H from 'history'
 
 interface Props {
     campaign: Pick<GQL.ICampaign, 'id' | 'url'>
+    tag?: 'span' | 'button' | Link
     children?: React.ReactFragment
     buttonClassName?: string
     history: H.History
@@ -15,6 +16,7 @@ interface Props {
 
 export const CampaignChangesetsAddExistingButton: React.FunctionComponent<Props> = ({
     campaign,
+    tag: Tag = 'span',
     children = (
         <>
             Track existing changeset <MenuDownIcon />
@@ -32,21 +34,35 @@ export const CampaignChangesetsAddExistingButton: React.FunctionComponent<Props>
         [isOpen]
     )
 
-    const id = 'CampaignChangesetsAddExistingButton'
+    const [popoverTarget, setPopoverTarget] = useState<HTMLElement | null>(null)
+    const popoverTargetReference = useCallback((element: HTMLElement | null) => setPopoverTarget(element), [])
 
     return (
         <>
-            <Link
+            <Tag
                 to={`${campaign.url}/edit`}
                 onClick={toggleIsOpen}
-                id={id}
                 className={`d-inline-flex align-items-center ${buttonClassName}`}
+                ref={popoverTargetReference}
             >
                 {children}
-            </Link>
-            <Popover placement="bottom-end" isOpen={isOpen} target={id} toggle={toggleIsOpen} innerClassName="p-3">
-                <AddChangesetForm campaignID={campaign.id} history={history} onAdd={() => console.log('TODO(sqs)')} />
-            </Popover>
+            </Tag>
+            {popoverTarget && (
+                <Popover
+                    placement="bottom-end"
+                    isOpen={isOpen}
+                    target={popoverTarget}
+                    toggle={toggleIsOpen}
+                    innerClassName="p-3"
+                    style={{ width: '30rem' }}
+                >
+                    <AddChangesetForm
+                        campaignID={campaign.id}
+                        history={history}
+                        onAdd={() => console.log('TODO(sqs)')}
+                    />
+                </Popover>
+            )}
         </>
     )
 }
