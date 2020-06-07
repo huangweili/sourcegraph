@@ -36,7 +36,7 @@ export const CampaignChangesetsAddExistingButton: React.FunctionComponent<Props>
                 id={id}
                 className={`btn d-inline-flex align-items-center ${buttonClassName} pr-1`}
             >
-                Track <MenuDownIcon />
+                Track existing changeset <MenuDownIcon />
             </Link>
             <Popover placement="bottom-end" isOpen={isOpen} target={id} toggle={toggleIsOpen} innerClassName="p-3">
                 <AddChangesetForm campaignID={campaign.id} history={history} onAdd={() => console.log('TODO(sqs)')} />

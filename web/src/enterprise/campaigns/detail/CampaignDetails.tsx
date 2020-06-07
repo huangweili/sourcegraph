@@ -35,6 +35,12 @@ import { Link } from 'react-router-dom'
 import { CampaignChangesetsEditButton } from './changesets/CampaignChangesetsEditButton'
 import { CampaignChangesetsAddExistingButton } from './changesets/CampaignChangesetsAddExistingButton'
 import { CampaignChangesets2 } from './changesets/CampaignChangesets2'
+import { CampaignsIcon } from '../icons'
+import { ChangesetStateIcon } from './changesets/ChangesetStateIcon'
+import { changesetStateIcons } from './changesets/presentation'
+import SourcePullIcon from 'mdi-react/SourcePullIcon'
+import SourceMergeIcon from 'mdi-react/SourceMergeIcon'
+import ProgressCheckIcon from 'mdi-react/ProgressCheckIcon'
 
 export type CampaignUIMode = 'viewing' | 'deleting' | 'closing'
 
@@ -107,6 +113,51 @@ export const CampaignDetails: React.FunctionComponent<Props> = ({
                 </header>
                 <Timeline className="mt-3">
                     <CampaignDescription campaign={campaign} history={history} className="w-100" />
+                    <div className="card mt-3 w-100">
+                        <div className="card-body d-flex align-items-center">
+                            <ProgressCheckIcon className="h3 mb-0 mr-2 icon-inline text-muted" />
+                            <strong className="mr-3">50% complete</strong>
+                            <span className="text-muted mr-2">8 changesets total</span>
+                            <div className="d-flex align-items-center flex-1">
+                                <span className="border2 p-2 mr-2">
+                                    <SourcePullIcon className="icon-inline text-muted" /> 2 unpublished
+                                </span>
+                                <span className="border2 p-2 mr-2">
+                                    <SourcePullIcon className="icon-inline text-success" /> 2 open
+                                </span>
+                                <span className="border2 p-2 mr-2">
+                                    <SourceMergeIcon className="icon-inline text-merged" /> 2 merged
+                                </span>
+                                <span className="border2 p-2 mr-2">
+                                    <SourcePullIcon className="icon-inline text-danger" /> 2 closed
+                                </span>
+                                <div className="flex-1" />
+                                <Link to="#changesets" className="btn btn-link ml-3">
+                                    View all changesets
+                                </Link>
+                            </div>
+                        </div>
+                        <footer className="card-footer small text-muted">
+                            To add a changeset to this campaign, <strong>update the campaign plan</strong> or{' '}
+                            <strong>track an existing changeset</strong>.
+                        </footer>
+                    </div>
+                    <div className="card mt-3 w-100">
+                        <div className="card-body d-flex">
+                            <CampaignsIcon className="h3 mb-0 mr-2 icon-inline text-muted" />
+                            <div className="d-flex align-items-center flex-1">
+                                <span>
+                                    Campaign plan set by <strong>sqs</strong>{' '}
+                                    <span className="text-muted">4 hours ago</span>
+                                </span>
+                                <div className="flex-1" />
+                                <CampaignChangesetsEditButton
+                                    campaign={campaign}
+                                    buttonClassName="btn-secondary ml-3"
+                                />
+                            </div>
+                        </div>
+                    </div>
                     <CampaignStatus campaign={campaign} afterRetry={afterRetry} history={history} className="mt-3" />
                     {totalChangesetCount > 0 && (
                         <div className="card mt-3 w-100 pr-4 pb-3">
@@ -118,15 +169,32 @@ export const CampaignDetails: React.FunctionComponent<Props> = ({
                         </div>
                     )}
                 </Timeline>
+                <div className="text-muted mt-2">
+                    To add a changeset to this campaign, <strong>update the campaign plan</strong> or{' '}
+                    <strong>track an existing changeset</strong>.
+                </div>
             </div>
             <nav className="mt-5 mb-3 border-top border-bottom py-2">
                 <div className="container d-flex align-items-center">
-                    <h3 className="font-weight-bold mb-0">Changesets</h3>
-                    {patchSet && <CampaignDiffStat campaign={campaign} patchSet={patchSet} className="ml-2 mb-0" />}
+                    <h3 className="font-weight-bold mb-0">
+                        Changesets
+                        <span className="badge badge-secondary ml-2">{campaign.changesets.totalCount}</span>
+                    </h3>
                     <div className="flex-1" />
                 </div>
             </nav>
             <div className="container">
+                <a id="changesets" />
+                <div className="d-flex align-items-center mb-2">
+                    <div className="text-muted small">&nbsp;</div>
+                    <div className="flex-1" />
+                    <CampaignChangesetsAddExistingButton
+                        campaign={campaign}
+                        buttonClassName="btn-link mr-2"
+                        history={history}
+                    />
+                    <CampaignChangesetsEditButton campaign={campaign} buttonClassName="btn-secondary" />
+                </div>
                 <CampaignChangesets
                     campaign={campaign}
                     changesetUpdates={changesetUpdates}
@@ -140,13 +208,17 @@ export const CampaignDetails: React.FunctionComponent<Props> = ({
                     telemetryService={telemetryService}
                     after={
                         campaign.viewerCanAdminister && (
-                            <div>
-                                <CampaignChangesetsAddExistingButton
-                                    campaign={campaign}
-                                    buttonClassName="btn-secondary mr-2"
-                                    history={history}
-                                />
-                                <CampaignChangesetsEditButton campaign={campaign} buttonClassName="btn-primary" />
+                            <div className="d-flex align-items-center">
+                                {patchSet && (
+                                    <CampaignDiffStat
+                                        campaign={campaign}
+                                        patchSet={patchSet}
+                                        className="ml-2 mr-2 mb-0"
+                                    />
+                                )}
+                                <button type="button" className="btn btn-secondary">
+                                    Publish all
+                                </button>
                             </div>
                         )
                     }

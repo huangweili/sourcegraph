@@ -93,14 +93,7 @@ export const CampaignStatus: React.FunctionComponent<CampaignStatusProps> = ({
 
     switch (state) {
         case 'completed':
-            return (
-                <div className={`card ${className}`}>
-                    <div className="card-body">
-                        TODO(sqs): 123 of 456 changesets are published to the code host. Statuses last synced 3 minutes
-                        ago.
-                    </div>
-                </div>
-            )
+            return null
         case 'errored':
             return (
                 <>

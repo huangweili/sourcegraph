@@ -29,7 +29,7 @@ export const CampaignChangesetsEditButton: React.FunctionComponent<Props> = ({ c
                 id={id}
                 className={`btn d-inline-flex align-items-center ${buttonClassName} pr-1`}
             >
-                Update <MenuDownIcon />
+                Update plan <MenuDownIcon />
             </Link>
             <Popover placement="bottom-end" isOpen={isOpen} target={id} toggle={toggleIsOpen} innerClassName="p-3">
                 <p>TODO(sqs) Using the Sourcegraph CLI, run:</p>

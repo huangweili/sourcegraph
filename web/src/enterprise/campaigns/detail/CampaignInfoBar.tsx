@@ -23,10 +23,10 @@ export const CampaignInfoBar: React.FunctionComponent<Props> = ({ campaign, clas
         <div className="flex-1" />
         {campaign.viewerCanAdminister && (
             <>
-                <Link to={`${campaign.url}/edit`} className="btn btn-outline-primary mr-2">
+                <Link to={`${campaign.url}/edit`} className="btn btn-secondary mr-2">
                     Edit
                 </Link>
-                <Link to={`${campaign.url}/close`} className="btn btn-outline-warning">
+                <Link to={`${campaign.url}/close`} className="btn btn-secondary">
                     Close
                 </Link>
             </>
