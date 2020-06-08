@@ -46,23 +46,26 @@ export const CampaignPreamble: React.FunctionComponent<Props> = ({ campaign, his
                             <SourcePullIcon className="icon-inline text-danger" /> 2 closed
                         </span>
                         <div className="flex-1" />
-                        <Link to={`${campaign.url}/burndown`} className="btn btn-link ml-3 mr-2 border">
-                            Burndown chart
-                        </Link>
                         <Link to={`${campaign.url}#changesets`} className="btn btn-link border">
                             All changesets
+                        </Link>
+                        <Link to={`${campaign.url}/burndown`} className="btn btn-link ml-3 mr-2 border">
+                            Burndown chart
                         </Link>
                     </div>
                 </div>
                 <footer className="card-footer small text-muted">
                     To add a changeset to this campaign,{' '}
-                    <CampaignChangesetsEditButton campaign={campaign} buttonClassName="font-weight-bold">
+                    <CampaignChangesetsEditButton
+                        campaign={campaign}
+                        buttonClassName="font-weight-bold btn btn-sm btn-link p-0"
+                    >
                         update the patches
                     </CampaignChangesetsEditButton>{' '}
                     or{' '}
                     <CampaignChangesetsAddExistingButton
                         campaign={campaign}
-                        buttonClassName="font-weight-bold"
+                        buttonClassName="font-weight-bold btn btn-sm btn-link p-0"
                         history={history}
                     >
                         track an existing changeset

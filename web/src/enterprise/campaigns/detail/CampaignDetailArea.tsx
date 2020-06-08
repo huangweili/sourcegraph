@@ -73,7 +73,7 @@ interface Props
 export const CampaignDetailArea: React.FunctionComponent<Props> = ({ campaign, history, match, ...props }) => (
     <>
         <PageTitle title={campaign.name} />
-        <div className="container">
+        <div className="container mb-5">
             <CampaignPreamble campaign={campaign} history={history} />
         </div>
         <OverviewPagesArea
@@ -105,7 +105,7 @@ export const CampaignDetailArea: React.FunctionComponent<Props> = ({ campaign, h
             ]}
             location={props.location}
             match={match}
-            className="mt-4 mb-3"
+            className="mb-3"
         />
     </>
 )

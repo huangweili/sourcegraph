@@ -8,7 +8,6 @@ import H from 'history'
 
 interface Props {
     campaign: Pick<GQL.ICampaign, 'id' | 'url'>
-    tag?: 'span' | 'button' | Link
     children?: React.ReactFragment
     buttonClassName?: string
     history: H.History
@@ -16,7 +15,6 @@ interface Props {
 
 export const CampaignChangesetsAddExistingButton: React.FunctionComponent<Props> = ({
     campaign,
-    tag: Tag = 'span',
     children = (
         <>
             Track existing changeset <MenuDownIcon />
@@ -39,14 +37,14 @@ export const CampaignChangesetsAddExistingButton: React.FunctionComponent<Props>
 
     return (
         <>
-            <Tag
-                to={`${campaign.url}/edit`}
+            <button
+                type="button"
                 onClick={toggleIsOpen}
                 className={`d-inline-flex align-items-center ${buttonClassName}`}
                 ref={popoverTargetReference}
             >
                 {children}
-            </Tag>
+            </button>
             {popoverTarget && (
                 <Popover
                     placement="bottom-end"

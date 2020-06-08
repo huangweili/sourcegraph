@@ -154,7 +154,7 @@ To update a campaign, you need [admin access to the campaign](managing_access.md
 1. In your terminal, run the command shown. The command will execute your [campaign action](actions.md) to generate patches and then upload them to the campaign for you to preview and accept.
 
     > You need [Sourcegraph CLI (`src`)](https://github.com/sourcegraph/src-cli) for this step. For reference, the command shown by the campaign is the following (with <code><em>CAMPAIGN-ID</em></code> filled in):
-   <pre><code>src actions exec -f action.json | src campaign update -preview -id=<em>CAMPAIGN-ID</em></code></pre>
+   <pre><code>src campaign update -preview -action action.json -id=<em>CAMPAIGN-ID</em></code></pre>
 1. Open the preview URL that the command printed out.
 1. Examine the preview. Confirm that the patches' diffs are what you intended.
    

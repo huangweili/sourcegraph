@@ -8,14 +8,12 @@ import HelpCircleOutlineIcon from 'mdi-react/HelpCircleOutlineIcon'
 
 interface Props {
     campaign: Pick<GQL.ICampaign, 'id' | 'url'>
-    tag?: 'span' | 'button' | Link
     children?: React.ReactFragment
     buttonClassName?: string
 }
 
 export const CampaignChangesetsEditButton: React.FunctionComponent<Props> = ({
     campaign,
-    tag: Tag = 'span',
     children = (
         <>
             Update patches <MenuDownIcon />
@@ -37,14 +35,14 @@ export const CampaignChangesetsEditButton: React.FunctionComponent<Props> = ({
 
     return (
         <>
-            <Tag
-                to={`${campaign.url}/edit`}
+            <button
+                type="button"
                 onClick={toggleIsOpen}
                 className={`d-inline-flex align-items-center ${buttonClassName}`}
                 ref={popoverTargetReference}
             >
                 {children}
-            </Tag>
+            </button>
             {popoverTarget && (
                 <Popover
                     placement="bottom-end"
@@ -57,8 +55,7 @@ export const CampaignChangesetsEditButton: React.FunctionComponent<Props> = ({
                     <p>Generate and upload patches:</p>
                     <pre style={{ backgroundColor: '#f3f3fa', overflow: 'auto' }} className="p-3">
                         <code>
-                            src actions exec -f action.json | \<br />
-                            &nbsp;&nbsp;src campaign update -preview -id={campaign.id}
+                            src campaign update -preview -action action.json -id={campaign.id.replace(/=*$/, '')}
                         </code>
                     </pre>
                     <p>Then open the link to preview and apply the changes.</p>

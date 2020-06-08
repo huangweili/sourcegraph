@@ -15,6 +15,11 @@ import {
     IPatchSet,
     IPatchesOnCampaignArguments,
     IPatchConnection,
+    IPatch,
+    IChangeset,
+    ChangesetState,
+    ChangesetReviewState,
+    ChangesetCheckState,
 } from '../../../../../shared/src/graphql/schema'
 import { DiffStatFields, FileDiffFields } from '../../../backend/diff'
 import { Connection, FilteredConnectionQueryArgs } from '../../../components/FilteredConnection'
@@ -247,6 +252,8 @@ export const queryChangesets = (
                 node(id: $campaign) {
                     __typename
                     ... on Campaign {
+                        updatedAt
+                        name
                         changesets(first: $first, state: $state, reviewState: $reviewState, checkState: $checkState) {
                             totalCount
                             nodes {
@@ -290,6 +297,27 @@ export const queryChangesets = (
                                 }
                             }
                         }
+                        patches(first: $first) {
+                            totalCount
+                            nodes {
+                                __typename
+                                id
+                                ... on Patch {
+                                    repository {
+                                        id
+                                        name
+                                        url
+                                    }
+                                    diff {
+                                        fileDiffs {
+                                            diffStat {
+                                                ...DiffStatFields
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -306,7 +334,29 @@ export const queryChangesets = (
             if (node.__typename !== 'Campaign') {
                 throw new Error(`The given ID is a ${node.__typename}, not a Campaign`)
             }
-            return node.changesets
+            return {
+                // TODO(sqs): remove when backend unifies changesets and patches
+                nodes: [
+                    ...node.changesets.nodes,
+                    ...node.patches.nodes.map(
+                        patch =>
+                            ({
+                                ...patch,
+                                __typename: 'ExternalChangeset',
+                                title: node.name,
+                                externalID: '0',
+                                createdAt: node.updatedAt,
+                                updatedAt: node.updatedAt,
+                                nextSyncAt: null,
+                                state: ChangesetState.OPEN,
+                                reviewState: ChangesetReviewState.PENDING,
+                                checkState: ChangesetCheckState.PENDING,
+                                labels: [],
+                            } as Changeset)
+                    ),
+                ],
+                totalCount: node.changesets.totalCount + node.patches.totalCount,
+            }
         })
     )
 export const queryPatchesFromCampaign = (

@@ -1,4 +1,6 @@
 .overview-pages-area-navbar {
+    background-color: var(--body-bg);
+
     &__nav-item {
         $margin: map-get($spacers, 2);
         margin-left: $margin;
