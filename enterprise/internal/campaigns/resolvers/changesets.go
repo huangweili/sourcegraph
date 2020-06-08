@@ -29,7 +29,12 @@ import (
 type changesetsConnectionResolver struct {
 	store       *ee.Store
 	httpFactory *httpcli.Factory
-	opts        ee.ListChangesetsOpts
+
+	opts ee.ListChangesetsOpts
+	// 🚨 SECURITY: If the given opts do not reveal hidden information about a
+	// changeset by including the changeset in the result set, this should be
+	// set to true.
+	optsSafe bool
 
 	// cache results because they are used by multiple fields
 	once           sync.Once
@@ -53,6 +58,12 @@ func (r *changesetsConnectionResolver) Nodes(ctx context.Context) ([]graphqlback
 			// If it's not in reposByID the repository was either deleted or
 			// filtered out by the authz-filter.
 			// In both cases: use hiddenChangesetResolver.
+
+			// But if the filter opts would leak information about the hidden
+			// changesets, we skip the hidden changeset
+			if !r.optsSafe {
+				continue
+			}
 			resolvers = append(resolvers, &hiddenChangesetResolver{
 				store:       r.store,
 				httpFactory: r.httpFactory,
@@ -81,6 +92,7 @@ func (r *changesetsConnectionResolver) TotalCount(ctx context.Context) (int32, e
 		ExternalCheckState:  r.opts.ExternalCheckState,
 		ExternalReviewState: r.opts.ExternalReviewState,
 	}
+	// TODO: Do we need to exclude hidden changesets?
 	count, err := r.store.CountChangesets(ctx, opts)
 	return int32(count), err
 }

@@ -478,6 +478,8 @@ func TestRepositoryPermissions(t *testing.T) {
 			ExternalServiceType: extsvc.TypeGitHub,
 			ExternalID:          fmt.Sprintf("external-%d", r.ID),
 			ExternalState:       campaigns.ChangesetStateOpen,
+			ExternalCheckState:  campaigns.ChangesetCheckStatePassed,
+			ExternalReviewState: campaigns.ChangesetReviewStateChangesRequested,
 			Metadata: &github.PullRequest{
 				BaseRefOid: changesetBaseRefOid,
 				HeadRefOid: changesetHeadRefOid,
@@ -555,7 +557,11 @@ func TestRepositoryPermissions(t *testing.T) {
 
 	// Query campaign and check that we get all changesets and all patches
 	userCtx := actor.WithActor(ctx, actor.FromUser(userID))
-	testCampaignResponse(t, s, userCtx, campaign.ID, wantCampaignResponse{
+
+	input := map[string]interface{}{
+		"campaign": string(campaigns.MarshalCampaignID(campaign.ID)),
+	}
+	testCampaignResponse(t, s, userCtx, input, wantCampaignResponse{
 		changesetTypes:     map[string]int{"ExternalChangeset": 2},
 		openChangesetTypes: map[string]int{"ExternalChangeset": 2},
 		errors: []string{
@@ -604,7 +610,10 @@ func TestRepositoryPermissions(t *testing.T) {
 
 	// Send query again and check that for each filtered repository we get a
 	// HiddenChangeset/HiddenPatch and that errors are filtered out
-	testCampaignResponse(t, s, userCtx, campaign.ID, wantCampaignResponse{
+	input = map[string]interface{}{
+		"campaign": string(campaigns.MarshalCampaignID(campaign.ID)),
+	}
+	want := wantCampaignResponse{
 		changesetTypes: map[string]int{
 			"ExternalChangeset":       1,
 			"HiddenExternalChangeset": 1,
@@ -631,7 +640,8 @@ func TestRepositoryPermissions(t *testing.T) {
 			Changed: 1 * patchesDiffStat.Changed,
 			Deleted: 1 * patchesDiffStat.Deleted,
 		},
-	})
+	}
+	testCampaignResponse(t, s, userCtx, input, want)
 
 	for _, c := range changesets {
 		// The changeset whose repository has been filtered should be hidden
@@ -650,6 +660,31 @@ func TestRepositoryPermissions(t *testing.T) {
 			testPatchResponse(t, s, userCtx, p.ID, "Patch")
 		}
 	}
+
+	// Now we query with more filters for the changesets. The hidden changesets
+	// should not be returned, since that would leak information about the
+	// hidden changesets.
+	input = map[string]interface{}{
+		"campaign":   string(campaigns.MarshalCampaignID(campaign.ID)),
+		"checkState": string(campaigns.ChangesetCheckStatePassed),
+	}
+	wantCheckStateResponse := want
+	wantCheckStateResponse.changesetTypes = map[string]int{
+		"ExternalChangeset": 1,
+		// No HiddenExternalChangeset
+	}
+	testCampaignResponse(t, s, userCtx, input, wantCheckStateResponse)
+
+	input = map[string]interface{}{
+		"campaign":    string(campaigns.MarshalCampaignID(campaign.ID)),
+		"reviewState": string(campaigns.ChangesetReviewStateChangesRequested),
+	}
+	wantReviewStateResponse := want
+	wantReviewStateResponse.changesetTypes = map[string]int{
+		"ExternalChangeset": 1,
+		// No HiddenExternalChangeset
+	}
+	testCampaignResponse(t, s, userCtx, input, wantReviewStateResponse)
 }
 
 type wantCampaignResponse struct {
@@ -661,15 +696,13 @@ type wantCampaignResponse struct {
 	patchSetDiffStat   apitest.DiffStat
 }
 
-func testCampaignResponse(t *testing.T, s *graphql.Schema, ctx context.Context, id int64, w wantCampaignResponse) {
+func testCampaignResponse(t *testing.T, s *graphql.Schema, ctx context.Context, in map[string]interface{}, w wantCampaignResponse) {
 	t.Helper()
 
 	var response struct{ Node apitest.Campaign }
-	query := fmt.Sprintf(queryCampaignPermLevels, campaigns.MarshalCampaignID(id))
+	apitest.MustExec(ctx, t, s, in, &response, queryCampaignPermLevels)
 
-	apitest.MustExec(ctx, t, s, nil, &response, query)
-
-	if have, want := response.Node.ID, string(campaigns.MarshalCampaignID(id)); have != want {
+	if have, want := response.Node.ID, in["campaign"]; have != want {
 		t.Fatalf("campaign id is wrong. have %q, want %q", have, want)
 	}
 
@@ -718,8 +751,8 @@ func testCampaignResponse(t *testing.T, s *graphql.Schema, ctx context.Context, 
 }
 
 const queryCampaignPermLevels = `
-query {
-  node(id: %q) {
+query($campaign: ID!, $state: ChangesetState, $reviewState: ChangesetReviewState, $checkState: ChangesetCheckState) {
+  node(id: $campaign) {
     ... on Campaign {
       id
 
@@ -728,7 +761,7 @@ query {
 		errors
 	  }
 
-      changesets(first: 100) {
+      changesets(first: 100, state: $state, reviewState: $reviewState, checkState: $checkState) {
         nodes {
           __typename
           ... on HiddenExternalChangeset {
