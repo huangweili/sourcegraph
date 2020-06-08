@@ -3,8 +3,8 @@ const { remove } = require('lodash')
 const { DefinePlugin, ProgressPlugin } = require('webpack')
 
 const config = {
-  stories: ['../**/*.story.tsx'],
-  addons: ['@storybook/addon-knobs', '@storybook/addon-actions', '@storybook/addon-options'],
+  stories: ['../**/*.story.(tsx|mdx)'],
+  addons: ['@storybook/addon-docs', '@storybook/addon-knobs', '@storybook/addon-actions', '@storybook/addon-options'],
   /**
    * @param config {import('webpack').Configuration}
    * @returns {import('webpack').Configuration}

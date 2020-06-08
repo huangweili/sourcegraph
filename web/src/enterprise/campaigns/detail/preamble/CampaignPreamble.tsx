@@ -13,6 +13,7 @@ import { CampaignsIcon } from '../../icons'
 import { CampaignStatus } from '../CampaignStatus'
 import H from 'history'
 import { MinimalCampaign } from '../CampaignArea'
+import { CampaignProgressCard } from './CampaignProgressCard'
 
 interface Props {
     campaign: MinimalCampaign
@@ -27,52 +28,22 @@ export const CampaignPreamble: React.FunctionComponent<Props> = ({ campaign, his
         </header>
         <Timeline className="mt-3">
             <CampaignDescription campaign={campaign} history={history} className="w-100" />
-            <div className="card mt-3 w-100">
-                <div className="card-body d-flex align-items-center">
-                    <ProgressCheckIcon className="h3 mb-0 mr-2 icon-inline text-muted" />
-                    <strong className="mr-3">50% complete</strong>
-                    <span className="text-muted mr-2">8 changesets total</span>
-                    <div className="d-flex align-items-center flex-1">
-                        <span className="border2 p-2 mr-2">
-                            <SourcePullIcon className="icon-inline text-muted" /> 2 unpublished
-                        </span>
-                        <span className="border2 p-2 mr-2">
-                            <SourcePullIcon className="icon-inline text-success" /> 2 open
-                        </span>
-                        <span className="border2 p-2 mr-2">
-                            <SourceMergeIcon className="icon-inline text-merged" /> 2 merged
-                        </span>
-                        <span className="border2 p-2 mr-2">
-                            <SourcePullIcon className="icon-inline text-danger" /> 2 closed
-                        </span>
-                        <div className="flex-1" />
-                        <Link to={`${campaign.url}#changesets`} className="btn btn-link border">
-                            All changesets
-                        </Link>
-                        <Link to={`${campaign.url}/burndown`} className="btn btn-link ml-3 mr-2 border">
-                            Burndown chart
-                        </Link>
-                    </div>
-                </div>
-                <footer className="card-footer small text-muted">
-                    To add a changeset to this campaign,{' '}
-                    <CampaignChangesetsEditButton
-                        campaign={campaign}
-                        buttonClassName="font-weight-bold btn btn-sm btn-link p-0"
-                    >
-                        update the patches
-                    </CampaignChangesetsEditButton>{' '}
-                    or{' '}
-                    <CampaignChangesetsAddExistingButton
-                        campaign={campaign}
-                        buttonClassName="font-weight-bold btn btn-sm btn-link p-0"
-                        history={history}
-                    >
-                        track an existing changeset
-                    </CampaignChangesetsAddExistingButton>
-                    .
-                </footer>
-            </div>
+            <CampaignProgressCard
+                campaign={campaign}
+                changesetCounts={
+                    /* TODO(sqs) */
+                    campaign.changesetCountsOverTime.length > 0 &&
+                    campaign.changesetCountsOverTime.some(e => e.total > 0)
+                        ? {
+                              ...campaign.changesetCountsOverTime[campaign.changesetCountsOverTime.length - 1],
+                              unpublished: 123 /* TODO(sqs) */,
+                          }
+                        : /* TODO(sqs) */
+                          { total: 107, merged: 23, closed: 8, open: 67, unpublished: 9 }
+                }
+                history={history}
+                className="w-100 mt-3"
+            />
             <div className="card mt-3 w-100">
                 <div className="card-body d-flex">
                     <CampaignsIcon className="h3 mb-0 mr-2 icon-inline text-muted" />
