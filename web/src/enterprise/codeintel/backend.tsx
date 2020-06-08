@@ -41,6 +41,10 @@ export function fetchLsifUploads({
                             id
                             state
                             projectRoot {
+                                repository {
+                                    name
+                                    url
+                                }
                                 commit {
                                     abbreviatedOID
                                     url
@@ -231,6 +235,10 @@ export function fetchLsifIndexes({
                             id
                             state
                             projectRoot {
+                                repository {
+                                    name
+                                    url
+                                }
                                 commit {
                                     abbreviatedOID
                                     url
