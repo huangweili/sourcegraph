@@ -4,54 +4,63 @@ import webStyles from '../../../../SourcegraphWebApp.scss'
 import * as H from 'history'
 import { MemoryRouter } from 'react-router'
 import { boolean } from '@storybook/addon-knobs'
-import { CampaignProgressCard } from './CampaignProgressCard'
+import { CampaignUpdatesCard } from './CampaignUpdatesCard'
 
 const history = H.createMemoryHistory()
 
-const { add } = storiesOf('web/campaigns/CampaignProgressCard', module).addDecorator(story => (
+const { add } = storiesOf('web/campaigns/CampaignUpdatesCard', module).addDecorator(story => (
     <>
         <style>{webStyles}</style>
         <div className="theme-light mt-3 container">{story()}</div>
     </>
 ))
 
-add('Empty', () => (
+add('Empty campaign', () => (
     <MemoryRouter>
-        <CampaignProgressCard
+        <CampaignUpdatesCard
             campaign={{
                 id: 'c',
                 url: '',
+                patchSetter: null,
+                patchesSetAt: null,
+                changesets: { totalCount: 0 },
                 viewerCanAdminister: boolean('Viewer can administer', true),
+                closedAt: boolean('Campaign closed', false) ? null : '2020-01-01',
             }}
-            changesetCounts={{ total: 0, merged: 0, closed: 0, open: 0, unpublished: 0 }}
             history={history}
         />
     </MemoryRouter>
 ))
 
-add('Partially complete', () => (
+add('With patches', () => (
     <MemoryRouter>
-        <CampaignProgressCard
+        <CampaignUpdatesCard
             campaign={{
                 id: 'c',
                 url: '',
+                patchSetter: { username: 'alice', url: '/users/alice' },
+                patchesSetAt: '2020-01-01',
+                changesets: { totalCount: 3 },
                 viewerCanAdminister: boolean('Viewer can administer', true),
+                closedAt: boolean('Campaign closed', false) ? null : '2020-01-01',
             }}
-            changesetCounts={{ total: 107, merged: 23, closed: 8, open: 67, unpublished: 9 }}
             history={history}
         />
     </MemoryRouter>
 ))
 
-add('Complete', () => (
+add('With tracked changesets only', () => (
     <MemoryRouter>
-        <CampaignProgressCard
+        <CampaignUpdatesCard
             campaign={{
                 id: 'c',
                 url: '',
+                patchSetter: null,
+                patchesSetAt: null,
+                changesets: { totalCount: 3 },
                 viewerCanAdminister: boolean('Viewer can administer', true),
+                closedAt: boolean('Campaign closed', false) ? null : '2020-01-01',
             }}
-            changesetCounts={{ total: 107, merged: 101, closed: 6, open: 0, unpublished: 0 }}
             history={history}
         />
     </MemoryRouter>

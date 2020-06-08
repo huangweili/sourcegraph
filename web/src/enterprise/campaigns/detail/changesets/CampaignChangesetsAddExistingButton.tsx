@@ -1,14 +1,12 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback } from 'react'
 import MenuDownIcon from 'mdi-react/MenuDownIcon'
 import * as GQL from '../../../../../../shared/src/graphql/schema'
-import { Link } from 'react-router-dom'
 import { Popover } from 'reactstrap'
 import { AddChangesetForm } from '../AddChangesetForm'
 import H from 'history'
 
 interface Props {
     campaign: Pick<GQL.ICampaign, 'id' | 'url'>
-    children?: React.ReactFragment
     buttonClassName?: string
     history: H.History
 }
@@ -17,7 +15,7 @@ export const CampaignChangesetsAddExistingButton: React.FunctionComponent<Props>
     campaign,
     children = (
         <>
-            Track existing changeset <MenuDownIcon />
+            Track existing changeset <MenuDownIcon className="icon-inline" />
         </>
     ),
     buttonClassName = '',

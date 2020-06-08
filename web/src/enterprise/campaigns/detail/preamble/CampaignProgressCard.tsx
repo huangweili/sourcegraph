@@ -43,7 +43,7 @@ export const CampaignProgressCard: React.FunctionComponent<Props> = ({
                     <ProgressCheckIcon className={`${iconClassName} text-muted`} />
                 )}
                 {changesetCounts.total === 0 ? (
-                    <strong>No changesets added yet</strong>
+                    <strong>No changesets added yet.</strong>
                 ) : (
                     <>
                         <strong className="mr-3">

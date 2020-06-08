@@ -1,14 +1,11 @@
 import React, { useState, useCallback } from 'react'
 import MenuDownIcon from 'mdi-react/MenuDownIcon'
 import * as GQL from '../../../../../../shared/src/graphql/schema'
-import { Link } from 'react-router-dom'
 import { Popover } from 'reactstrap'
-import { CopyableText } from '../../../../components/CopyableText'
 import HelpCircleOutlineIcon from 'mdi-react/HelpCircleOutlineIcon'
 
 interface Props {
     campaign: Pick<GQL.ICampaign, 'id' | 'url'>
-    children?: React.ReactFragment
     buttonClassName?: string
 }
 
@@ -16,7 +13,7 @@ export const CampaignChangesetsEditButton: React.FunctionComponent<Props> = ({
     campaign,
     children = (
         <>
-            Update patches <MenuDownIcon />
+            Update patches <MenuDownIcon className="icon-inline" />
         </>
     ),
     buttonClassName = '',
