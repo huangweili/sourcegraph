@@ -27,7 +27,15 @@ type lsifQueryResolver struct {
 	uploads []db.Dump
 }
 
-var _ graphqlbackend.LSIFQueryResolver = &lsifQueryResolver{}
+var _ graphqlbackend.GitBlobLSIFDataResolver = &lsifQueryResolver{}
+
+func (r *lsifQueryResolver) ToGitTreeLSIFData() (graphqlbackend.GitTreeLSIFDataResolver, bool) {
+	return r, true
+}
+
+func (r *lsifQueryResolver) ToGitBlobLSIFData() (graphqlbackend.GitBlobLSIFDataResolver, bool) {
+	return r, true
+}
 
 func (r *lsifQueryResolver) Definitions(ctx context.Context, args *graphqlbackend.LSIFQueryPositionArgs) (graphqlbackend.LocationConnectionResolver, error) {
 	for _, upload := range r.uploads {
@@ -179,6 +187,25 @@ func (r *lsifQueryResolver) Hover(ctx context.Context, args *graphqlbackend.LSIF
 	}
 
 	return nil, nil
+}
+
+func (r *lsifQueryResolver) Diagnostics(ctx context.Context, args *graphqlbackend.LSIFDiagnosticsArgs) (graphqlbackend.DiagnosticConnectionResolver, error) {
+	var allDiagnostics []bundles.Diagnostic
+	for _, upload := range r.uploads {
+		// TODO(efritz) - apply limits more intelligently
+		diagnostics, err := r.codeIntelAPI.Diagnostics(ctx, r.path, upload.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		allDiagnostics = append(allDiagnostics, diagnostics...)
+	}
+
+	return &diagnosticConnectionResolver{
+		repo:        r.repositoryResolver.Type(),
+		commit:      r.commit,
+		diagnostics: allDiagnostics,
+	}, nil
 }
 
 // adjustPosition adjusts the position denoted by `line` and `character` in the requested commit into an

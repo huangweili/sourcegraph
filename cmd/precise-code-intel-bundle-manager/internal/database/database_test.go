@@ -119,6 +119,10 @@ func TestDatabaseHover(t *testing.T) {
 	}
 }
 
+func TestDatabaseDiagnostics(t *testing.T) {
+	// TODO(efritz) - no test data until tests are rewritten
+}
+
 func TestDatabaseMonikersByPosition(t *testing.T) {
 	// `func NewMetaData(id, root string, info ToolInfo) *MetaData {`
 	//       ^^^^^^^^^^^
